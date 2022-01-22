@@ -1,7 +1,7 @@
 /* 
   Student Name: Lucas Weber
   Student ID: 1186969 
-  Due Date: Mon Day, 2022
+  Due Date: Feb 3, 2022
   Course: CIS*2500 
  
   I have exclusive control over this submission via my password. 
@@ -14,6 +14,7 @@
   paraphrased. Furthermore, I certify that this assignment was written 
   by me in its entirety. 
 */
+
 #include <stdio.h>
 #include <string.h>
 
@@ -35,4 +36,3 @@ int getMostCriticalReviewers(reviewStruct reviews[NUMBER_REVIEWERS], char mostCr
 int getMostRecommendedMovies(const char movieNames[NUMBER_MOVIES][MAX_STR], const reviewStruct reviews[NUMBER_REVIEWERS], char mostRecommendedMovies[NUMBER_MOVIES][MAX_STR]);
 int predictMovie(const char movie[MAX_STR]);
 int enumerateMovie(const char movie[MAX_STR], int charCounts[MAX_WORDS]);
-
