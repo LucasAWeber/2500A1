@@ -21,7 +21,7 @@ int readReviews(FILE *file, reviewStruct reviews[NUMBER_REVIEWERS])
     int i = 0;
     while (!feof(file))
     {
-        
+        fscanf(file, "%s", reviews[i].reviewer);
         i++;
     }
     return 1;
