@@ -165,6 +165,7 @@ int predictMovie(const char movie[MAX_STR])
     int j;
     int evenNumChars = 0;
     int numLetters = 0;
+    int sameLetters;
     for (int i = 0; i < strlen(movie) - 1; i++)
     {
         if(movie[i] == ' ' && movie[i+1] != ' ')
@@ -172,7 +173,6 @@ int predictMovie(const char movie[MAX_STR])
             numWords++;
         }
     }
-    printf("%d\n", numWords);
 
     if (numWords > 2)
     {
@@ -182,7 +182,6 @@ int predictMovie(const char movie[MAX_STR])
     {
         sales -= 2;
     }
-    printf("%d\n", sales);
 
     if (numWords > 1)
     {
@@ -201,8 +200,30 @@ int predictMovie(const char movie[MAX_STR])
         if (evenNumChars >= 2)
         {
             sales++;
-            printf("%d even num of chars in each word pog\n", sales);
         }
+    }
+
+    j = -1;
+    for (int i = 0; i < numWords; i++)
+    {
+        j++;
+        while (movie[j] != ' ' && movie[j] != '\0')
+        {
+            j++;
+        }
+        if (i == 0)
+        {
+            sameLetters = 1;
+            numLetters = j;
+        }
+        else if (j - (i * (numLetters + 1)) != numLetters)
+        {
+            sameLetters = 0;
+        }
+    }
+    if (sameLetters == 1)
+    {
+        sales += 2;
     }
 
     if (sales > 2)
@@ -214,4 +235,44 @@ int predictMovie(const char movie[MAX_STR])
         sales = -2;
     }
     return sales;
+}
+
+int enumerateMovie(const char movie[MAX_STR], int charCounts[MAX_WORDS])
+{
+    int numWords = 1;
+    int j = -1;
+    for (int i = 0; i < strlen(movie) - 1; i++)
+    {
+        if(movie[i] == ' ' && movie[i+1] != ' ')
+        {
+            numWords++;
+        }
+    }
+
+    for (int i = 0; i < numWords; i++)
+    {
+        j++;
+        while (movie[j] != ' ' && movie[j] != '\0')
+        {
+            j++;
+        }
+        if (i == 0)
+        {
+            charCounts[i] = j;
+        }
+        else
+        {
+            charCounts[i] = j;
+            for (int k = 0; k < i; k++)
+            {
+                charCounts[i] -= charCounts[k] + 1;
+            }
+        }
+    }
+    for (int i = 0; i < numWords; i++)
+    {
+        printf("number of characters in the %dth term: %d\n", i, charCounts[i]);
+    }
+
+    return numWords;
 }
