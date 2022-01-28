@@ -237,6 +237,7 @@ int predictMovie(const char movie[MAX_STR])
     return sales;
 }
 
+// counts the number of words in a given movie title and determines the number of characters in each word
 int enumerateMovie(const char movie[MAX_STR], int charCounts[MAX_WORDS])
 {
     int numWords = 1;
@@ -268,10 +269,6 @@ int enumerateMovie(const char movie[MAX_STR], int charCounts[MAX_WORDS])
                 charCounts[i] -= charCounts[k] + 1;
             }
         }
-    }
-    for (int i = 0; i < numWords; i++)
-    {
-        printf("number of characters in the %dth term: %d\n", i, charCounts[i]);
     }
 
     return numWords;
