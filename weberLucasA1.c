@@ -35,7 +35,7 @@ int readMovies(FILE *file, char movieNames[NUMBER_MOVIES][MAX_STR])
 }
 
 // reads reviews from the passed in txt file to the passed in array with abnormal exits
-int readReviews(FILE *file, reviewStruct reviews[NUMBER_REVIEWERS])
+int readReviews(FILE *file, struct reviewStruct reviews[NUMBER_REVIEWERS])
 {
     if (!file)
     {
@@ -55,10 +55,6 @@ int readReviews(FILE *file, reviewStruct reviews[NUMBER_REVIEWERS])
         for (int j = 0; j < 3; j++)
         {
             strcpy(charRatings[j], strtok(NULL, " "));
-            if (charRatings[j][strlen(charRatings[j]) - 1] == '\n')
-            {
-                charRatings[j][strlen(charRatings[j]) - 1] = '\0';
-            }
             if (charRatings[j][0] == 'Y' || charRatings[j][0] == 'y')
             {
                 reviews[i].feedback[j] = 1;
@@ -78,7 +74,7 @@ int readReviews(FILE *file, reviewStruct reviews[NUMBER_REVIEWERS])
 }
 
 // reads the feedback from reviewers from struct determining how many/who are the most critical reviewers
-int getMostCriticalReviewers(reviewStruct reviews[NUMBER_REVIEWERS], char mostCriticalReviewers[NUMBER_REVIEWERS][MAX_STR])
+int getMostCriticalReviewers(struct reviewStruct reviews[NUMBER_REVIEWERS], char mostCriticalReviewers[NUMBER_REVIEWERS][MAX_STR])
 {
     int mostNegReviews = 0;
     int currentNegReviews = 0;
@@ -119,43 +115,103 @@ int getMostCriticalReviewers(reviewStruct reviews[NUMBER_REVIEWERS], char mostCr
     return numCriticalReviewers;
 }
 
-int getMostRecommendedMovies(const char movieNames[NUMBER_MOVIES][MAX_STR], const reviewStruct reviews[NUMBER_REVIEWERS], char mostRecommendedMovies[NUMBER_MOVIES][MAX_STR])
+// reads the reviews for each movie determining the most recommended movies and how many of them there are
+int getMostRecommendedMovies(const char movieNames[NUMBER_MOVIES][MAX_STR], const struct reviewStruct reviews[NUMBER_REVIEWERS], char mostRecommendedMovies[NUMBER_MOVIES][MAX_STR])
 {
     int intMostRecommendedMovies = 0;
-    int currentMovieRecommendations = 0;
-    int numMostRecommendedMovies = 0;
+    int currentMovie = 0;
+    int numMostRecommended = 0;
 
     for (int i = 0; i < NUMBER_MOVIES; i++)
     {
-        currentMovieRecommendations = 0;
+        currentMovie = 0;
         for (int j = 0; j < NUMBER_REVIEWERS; j++)
         {
-            if (reviews[j].feedback[i] == 0)
+            if (reviews[j].feedback[i] == 1)
             {
-                currentMovieRecommendations += 1;
+                currentMovie += 1;
             }
         }
-        if (currentMovieRecommendations > intMostRecommendedMovies)
+        if (currentMovie > intMostRecommendedMovies)
         {
-            intMostRecommendedMovies = currentMovieRecommendations;
+            intMostRecommendedMovies = currentMovie;
         }
     }
 
     for (int i = 0; i < NUMBER_MOVIES; i++)
     {
-        currentMovieRecommendations = 0;
+        currentMovie = 0;
         for (int j = 0; j < NUMBER_REVIEWERS; j++)
         {
-            if (reviews[j].feedback[i] == 0)
+            if (reviews[j].feedback[i] == 1)
             {
-                currentMovieRecommendations += 1;
+                currentMovie += 1;
             }
         }
-        if (currentMovieRecommendations == intMostRecommendedMovies)
+        if (currentMovie == intMostRecommendedMovies)
         {
-            strcpy(mostRecommendedMovies[numMostRecommendedMovies], movieNames[i]);
-            numMostRecommendedMovies += 1;
+            strcpy(mostRecommendedMovies[numMostRecommended], movieNames[i]);
+            numMostRecommended += 1;
         }
     }
-    return numMostRecommendedMovies;
+    return numMostRecommended;
+}
+
+// predicts the performance of a movie based on the title (number of words, characters, etc)
+int predictMovie(const char movie[MAX_STR])
+{
+    int numWords = 1;
+    int sales = 0;
+    int j;
+    int evenNumChars = 0;
+    int numLetters = 0;
+    for (int i = 0; i < strlen(movie) - 1; i++)
+    {
+        if(movie[i] == ' ' && movie[i+1] != ' ')
+        {
+            numWords++;
+        }
+    }
+    printf("%d\n", numWords);
+
+    if (numWords > 2)
+    {
+        sales--;
+    }
+    else if (numWords == 1)
+    {
+        sales -= 2;
+    }
+    printf("%d\n", sales);
+
+    if (numWords > 1)
+    {
+        for (int i = 0; i < numWords; i++)
+        {
+            j = 0;
+            while (movie[j] != ' ' && movie[j] != '\0')
+            {
+                j++;
+            }
+            if (j % 2 == 0)
+            {
+                evenNumChars++;
+            }
+        }
+        if (evenNumChars >= 2)
+        {
+            sales++;
+            printf("%d even num of chars in each word pog\n", sales);
+        }
+    }
+
+    if (sales > 2)
+    {
+        sales = 2;
+    }
+    else if (sales < -2)
+    {
+        sales = -2;
+    }
+    return sales;
 }
