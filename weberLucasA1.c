@@ -11,6 +11,7 @@ int readMovies(FILE *file, char movieNames[NUMBER_MOVIES][MAX_STR])
 {
     if (!file)
     {
+        fclose(file);
         return 0;
     }
     int i = 0;
@@ -18,6 +19,7 @@ int readMovies(FILE *file, char movieNames[NUMBER_MOVIES][MAX_STR])
     {
         if (i == NUMBER_MOVIES)
         {
+            fclose(file);
             return 0;
         }
         fgets(movieNames[i], MAX_STR, file);
@@ -29,8 +31,10 @@ int readMovies(FILE *file, char movieNames[NUMBER_MOVIES][MAX_STR])
     }
     if (i < NUMBER_MOVIES)
     {
+        fclose(file);
         return 0;
     }
+    fclose(file);
     return 1;
 }
 
@@ -39,6 +43,7 @@ int readReviews(FILE *file, struct reviewStruct reviews[NUMBER_REVIEWERS])
 {
     if (!file)
     {
+        fclose(file);
         return 0;
     }
     int i = 0;
@@ -48,6 +53,7 @@ int readReviews(FILE *file, struct reviewStruct reviews[NUMBER_REVIEWERS])
     {
         if (i == NUMBER_REVIEWERS)
         {
+            fclose(file);
             return 0;
         }
         fgets(readFromFile, MAX_STR, file);
@@ -68,8 +74,10 @@ int readReviews(FILE *file, struct reviewStruct reviews[NUMBER_REVIEWERS])
     }
     if (i < NUMBER_REVIEWERS)
     {
+        fclose(file);
         return 0;
     }
+    fclose(file);
     return 1;
 }
 
